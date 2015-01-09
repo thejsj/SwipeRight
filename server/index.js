@@ -1,24 +1,27 @@
 /*jshint node:true*/
 'use strict';
+var config = require('config');
+var express = require('express');
+var bodyParser = require('body-parser');
+var session = require('express-session');
 
-var FBClientId = '633057653465304';
-var FBClientSecret = 'e6faf811ec096d92a37882e3a6691592';
+var apiRouter = require('./api-router');
 
-var FB_USER_TOKEN = "CAAGm0PX4ZCpsBACoCt8hICfoPwKSOcY4Vvqo1gicW5OfLWYlZA0pMhlPE6ZCkO30ztuqIYs3GYr3E2QeeVnS4zpkqWaPZBC0duZAZCIF6zo7mmbFxVjkzuQ4robZCZCnJSBsSFoMPGuuyssWn0AZAmjq2J2DWM4Ne9s6Tg8rdxWGl4Bpo32UIbAgTmo9CqEhOdOzwBCFlrvyo7bJZAasCMafsB";
-var FB_USER_ID = 500712220;
+var app = express();
 
-var tinder = require('tinderjs');
-var client = new tinder.TinderClient();
+app
+  .use(bodyParser.urlencoded({
+    extended: true
+  }))
+  .use(bodyParser.json())
+  .use(session({
+    secret: 'zfnzkwjehgweghw',
+    resave: false,
+    saveUninitialized: true
+  }));
 
-client.authorize(
-  FB_USER_TOKEN,
-  FB_USER_ID,
-  function() {
-    var defaults = client.getDefaults();
-    var recs_size = defaults.globals.recs_size;
-    client.getRecommendations(recs_size, function(error, data){
-      console.log('data');
-      console.log(data);
-    });
-  }
-);
+app
+  .use('/api', apiRouter)
+  .listen(config.get('PORT'), function () {
+    console.log('Server listening on port:', config.get('PORT'));
+  });
