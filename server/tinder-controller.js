@@ -20,6 +20,30 @@ var tinderController = {
       });
     }
   );
+  },
+  post: function (req, res) {
+    var action = req.body.action;
+    var userId = req.body.userId;
+    console.log('POST', req.body);
+    console.log('ACTION', action);
+    client.authorize(
+      config.get('FB_USER_TOKEN'),
+      config.get('FB_USER_ID'),
+      function() {
+        // Like
+        if (action === 'like') {
+          client.like(userId, function () {
+            res.status(201).end();
+          });
+        }
+        // Pass
+        if (action === 'pass') {
+          client.pass(userId, function () {
+            res.status(201).end();
+          });
+        }
+      }
+    );
   }
 };
 
