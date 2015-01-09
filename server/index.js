@@ -22,6 +22,6 @@ app
 
 app
   .use('/api', apiRouter)
-  .listen(config.get('PORT'), function () {
-    console.log('Server listening on port:', config.get('PORT'));
+  .listen(process.env.PORT || config.get('PORT'), function () {
+    console.log('Server listening on port:', process.env.PORT || config.get('PORT'));
   });
